@@ -328,7 +328,7 @@ class Testify
      *
      * @return boolean
      */
-    private function recordTest($pass, $message = '')
+    protected function recordTest($pass, $message = '')
     {
         if (!array_key_exists($this->currentTestCase, $this->stack) ||
               !is_array($this->stack[$this->currentTestCase])) {
@@ -372,7 +372,7 @@ class Testify
             $this->fileCache[$file] = file($file);
         }
 
-        return trim($this->fileCache[$file][$line]);
+        return trim($this->fileCache[$file][$line - 1]);
     }
 
     /**

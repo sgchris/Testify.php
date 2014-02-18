@@ -1,0 +1,5 @@
+method,path,parameters,expected result
+post,http://api.snipeasy.com/snippets,,"{""result"":""error"",""error"":""field title wasn't supplied""}"
+post,http://api.snipeasy.com/snippets,title=test%20title,"{""result"":""error"",""error"":""field content wasn't supplied""}"
+post,http://api.snipeasy.com/snippets,title=test%20title&content=test%20content,"{""result"":""error"",""error"":""field auth_token wasn't supplied""}"
+post,http://api.snipeasy.com/snippets,title=test%20title&content=test%20content&auth_token=abcdefg,"{""result"":""error"",""error"":""field auth_token wasn't supplied""}"
