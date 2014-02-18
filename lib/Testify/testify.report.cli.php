@@ -1,4 +1,12 @@
 <?php
+// avoid declaring the function twice (or more), when calling several tests at once
+if (!function_exists('percent')) {
+	function percent($suiteResults) {
+		$sum = $suiteResults['pass'] + $suiteResults['fail'];
+		return $sum > 0 ? round($suiteResults['pass'] * 100 / $sum, 2) : 100;
+	}
+}
+
 $result = $suiteResults['fail'] === 0 ? 'pass' : 'fail';
 
 echo str_repeat('-', 80)."\n",
@@ -25,7 +33,3 @@ echo str_repeat('=', 80)."\n",
     "Tests: [$result], {pass {$suiteResults['pass']} / fail {$suiteResults['fail']}}, ",
     percent($suiteResults)."% success\n";
 
-function percent($suiteResults) {
-    $sum = $suiteResults['pass'] + $suiteResults['fail'];
-    return $sum > 0 ? round($suiteResults['pass'] * 100 / $sum, 2) : 100;
-}

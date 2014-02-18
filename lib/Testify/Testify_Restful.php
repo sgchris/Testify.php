@@ -33,8 +33,8 @@ namespace Testify;
 
 class Testify_Restful extends Testify {
 
-    private $requestMethods = ['get', 'post', 'put', 'delete', 'head', 'options'];
-    protected $CSVFields = ['method', 'url', 'parameters', 'expected result'];
+    private $requestMethods = array('get', 'post', 'put', 'delete', 'head', 'options');
+    protected $CSVFields = array('method', 'url', 'parameters', 'expected result');
 
     /**
      * Check if cURL module installed
