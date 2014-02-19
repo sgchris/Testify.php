@@ -47,6 +47,38 @@ $tf->test("Testing the mul() method", function($tf) {
 $tf();
 ```
 
+RESTFul tests extension (for testing RESTFul APIs)
+(The library uses php CURL module)
+
+Usage:
+
+```php
+$tfr = new \Testify\Testify_Restful;
+
+// assert restful service
+$tfr->assertRequest($method, $url, $params, $expectedResultOrMethod, $message = '')
+// assert all the requests in the CSV file
+$tfr->assertCSV($CSV_fileName);
+
+// example #1: check result for exact output
+$tfr->assertRequest($method = 'POST', $url = 'http://example.com/users', $params = array('username'=>'sgchris'), 
+  $expectedResult = '{"result":"ok"}');
+
+// example #2: check result with callback
+$tfr->assertRequest($method = 'POST', $url = 'http://example.com/users', $params = array('username'=>'sgchris'), function($result) {
+  // manipulate/check the response and return boolean value
+  return !empty($result) && strlen($result) == 10;
+});
+
+// example #3: check CSV file
+// CSV file format:
+// | method (string - get/post/put/..) | url (string) | parameters (query string) | expected result (string) |
+$tfr->assertCSV('requests_descriptions.csv');
+
+// execute the test
+$tfr();
+```
+
 # Documentation
 
  * `__construct( string $title )` - The constructor
@@ -69,4 +101,8 @@ $tf();
  * `fail( string [string $message = ''] )` - Unconditional fail
  * `report( )` - Generates a pretty CLI or HTML5 report of the test suite status. Called implicitly by run()
  * `__invoke( )` - Alias for run() method
+
+# RESTFul extension
+ * assertRequest($method, $url, $params, $expectedResultOrMethod[, $message = '']) - execute a RESTFul call and compare the result / execute callback
+ * assertCSV($CSV_fileName) - execute all the requests in the CSV
 
