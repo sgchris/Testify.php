@@ -103,6 +103,6 @@ $tfr();
  * `__invoke( )` - Alias for run() method
 
 # RESTFul extension
- * assertRequest($method, $url, $params, $expectedResultOrMethod[, $message = '']) - execute a RESTFul call and compare the result / execute callback
- * assertCSV($CSV_fileName) - execute all the requests in the CSV
+ * `assertRequest($method, $url, $params, $expectedResultOrMethod[, $message = '']) - execute a RESTFul call and compare the result / execute callback
+ * `assertCSV($CSV_fileName) - execute all the requests in the CSV
 

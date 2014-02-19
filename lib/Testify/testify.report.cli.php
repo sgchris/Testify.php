@@ -1,10 +1,23 @@
 <?php
+
+// colorize the output of the test
+require_once __DIR__.'/../colors.php';
+
+use Colors\Color;
+
 // avoid declaring the function twice (or more), when calling several tests at once
 if (!function_exists('percent')) {
-	function percent($suiteResults) {
-		$sum = $suiteResults['pass'] + $suiteResults['fail'];
-		return $sum > 0 ? round($suiteResults['pass'] * 100 / $sum, 2) : 100;
-	}
+    /**
+     * percent 
+     * 
+     * @param mixed $suiteResults 
+     * @access public
+     * @return void
+     */
+    function percent($suiteResults) {
+        $sum = $suiteResults['pass'] + $suiteResults['fail'];
+        return $sum > 0 ? round($suiteResults['pass'] * 100 / $sum, 2) : 100;
+    }
 }
 
 $result = $suiteResults['fail'] === 0 ? 'pass' : 'fail';
@@ -29,7 +42,13 @@ foreach($cases as $caseTitle => $case) {
     }
 }
 
-echo str_repeat('=', 80)."\n",
-    "Tests: [$result], {pass {$suiteResults['pass']} / fail {$suiteResults['fail']}}, ",
-    percent($suiteResults)."% success\n";
+// colorize the output
+$outputColor = strcasecmp($result, 'pass') == 0 ? 'green' : 'red';
+$colors = new Color;
+
+// output total test results
+echo str_repeat('=', 80)."\n";
+echo $colors("Tests: [$result], ".
+    "{pass {$suiteResults['pass']} / fail {$suiteResults['fail']}}, ".
+    percent($suiteResults)."% success\n")->$outputColor;
 

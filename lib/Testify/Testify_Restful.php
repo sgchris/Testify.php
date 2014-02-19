@@ -36,6 +36,8 @@
  */
 namespace Testify;
 
+require_once __DIR__.'/Testify.php';
+
 class Testify_Restful extends Testify {
 
     private $requestMethods = array('get', 'post', 'put', 'delete', 'head', 'options');
@@ -97,7 +99,7 @@ class Testify_Restful extends Testify {
 
         // compare the result with the expected result
         if (is_string($expectedResultOrMethod)) {
-            return $this->recordTest($response == $expectedResultOrMethod, $message);
+            return $this->recordTest($response == $expectedResultOrMethod, "expected {$expectedResultOrMethod}, got {$response}\n{$message}");
         } elseif (is_callable($expectedResultOrMethod)) {
             $callbackResult = call_user_func_array($expectedResultOrMethod, array($response));
             return $this->recordTest($callbackResult, $message);
