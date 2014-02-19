@@ -8,21 +8,26 @@
  *
  * $tfr = new \Testify\Testify_Restful;
  * 
- * // add CSV file with 4 columns:
- * // | method (get/post/put/..) | url | parameters (JSON) | expected result |
- * $tfr->addCSVFile('some_file.csv');
- *
  * // assert restful service
- * $tfr->assertRESTFul($method, $url, $params, $expectedResultOrMethod, $message = '')
- * // example #1:
- * $tfr->assertRESTFul($method = 'POST', $url = 'http://example.com/users', $params = array('username'=>'sgchris'), 
- *      $expectedResult = '{"result":"ok"}');
- * // example #2:
- * $tfr->assertRESTFul($method = 'POST', $url = 'http://example.com/users', $params = array('username'=>'sgchris'), function($result) {
- *      // manipulate the response and return boolean value
- *      return !empty($result) && strlen($result) == 10;
+ * $tfr->assertRequest($method, $url, $params, $expectedResultOrMethod, $message = '')
+ * // assert all the requests in the CSV file
+ * $tfr->assertCSV($CSV_fileName);
+ * 
+ * // example #1: check result for exact output
+ * $tfr->assertRequest($method = 'POST', $url = 'http://example.com/users', $params = array('username'=>'sgchris'), 
+ *   $expectedResult = '{"result":"ok"}');
+ * 
+ * // example #2: check result with callback
+ * $tfr->assertRequest($method = 'POST', $url = 'http://example.com/users', $params = array('username'=>'sgchris'), function($result) {
+ *   // manipulate/check the response and return boolean value
+ *   return !empty($result) && strlen($result) == 10;
  * });
- *
+ * 
+ * // example #3: check CSV file
+ * // CSV file format:
+ * // | method (string - get/post/put/..) | url (string) | parameters (query string) | expected result (string) |
+ * $tfr->assertCSV('requests_descriptions.csv');
+ * 
  * // execute the test
  * $tfr();
  *
@@ -62,7 +67,7 @@ class Testify_Restful extends Testify {
     public function assertRequest($method, $url, $parameters, $expectedResultOrMethod, $message = '') {
 
         // initialize CURL
-        if (!$this->CURLInstalled() || false == ($ch = @curl_init())) {
+        if (!$this->CURLInstalled() || false === ($ch = @curl_init())) {
             return $this->recordTest(false, 'Error initializing CURL PHP module');
         }
 
