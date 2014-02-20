@@ -4,6 +4,7 @@
 require_once __DIR__.'/../colors.php';
 
 use Colors\Color;
+$colors = new Color;
 
 // avoid declaring the function twice (or more), when calling several tests at once
 if (!function_exists('percent')) {
@@ -21,17 +22,21 @@ if (!function_exists('percent')) {
 }
 
 $result = $suiteResults['fail'] === 0 ? 'pass' : 'fail';
+$resultColored = strcasecmp($result, 'pass') == 0 ? $colors($result)->green : $colors($result)->red;
 
 echo str_repeat('-', 80)."\n",
-    " $title  [$result]\n";
+    " $title  [$resultColored]\n";
 
 foreach($cases as $caseTitle => $case) {
+	$resultColored = strcasecmp($result, 'pass') == 0 ? $colors($result)->green() : $colors($result)->red();
     echo "\n",
         str_repeat('-', 80)."\n",
-        "[$result]  $caseTitle  {pass {$case['pass']} / fail {$case['fail']}}\n\n";
+        "[".$resultColored."]  $caseTitle  {pass {$case['pass']} / fail {$case['fail']}}\n\n";
 
     foreach ($case['tests'] as $test) {
-        echo "[{$test['result']}] {$test['type']}()\n",
+		$testResultColorized = strcasecmp($test['result'], 'pass') == 0 ? 
+			$colors($test['result'])->green() : $colors($test['result'])->red();
+        echo "[{$testResultColorized}] {$test['type']}()\n",
             str_repeat(' ', 7)."line {$test['line']}, {$test['file']}\n",
             str_repeat(' ', 7)."{$test['source']}\n";
 
@@ -44,11 +49,10 @@ foreach($cases as $caseTitle => $case) {
 
 // colorize the output
 $outputColor = strcasecmp($result, 'pass') == 0 ? 'green' : 'red';
-$colors = new Color;
 
 // output total test results
 echo str_repeat('=', 80)."\n";
 echo $colors("Tests: [$result], ".
     "{pass {$suiteResults['pass']} / fail {$suiteResults['fail']}}, ".
-    percent($suiteResults)."% success\n")->$outputColor;
+    percent($suiteResults)."% success\n")->$outputColor();
 
