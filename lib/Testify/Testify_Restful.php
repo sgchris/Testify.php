@@ -132,8 +132,10 @@ class Testify_Restful extends Testify {
         while (false !== ($row = fgetcsv($fp))) {
 
             // validate the row
-            if (!$this->CSVRowIsValid($row)) 
+            if (!$this->CSVRowIsValid($row)) {
+				echo 'row ', json_encode($row), ' is invalid!', "\n";
                 continue;
+			}
 
             // assert the request
             $this->assertRequest( $row[array_search('method', $this->CSVFields)], $row[array_search('url', $this->CSVFields)], 
