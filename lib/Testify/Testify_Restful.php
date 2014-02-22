@@ -131,6 +131,11 @@ class Testify_Restful extends Testify {
         // get the data from the file line by line
         while (false !== ($row = fgetcsv($fp))) {
 
+			// check for empty rows
+			if (isset($row[0]) && empty($row[0])) {
+				continue;
+			}
+
             // validate the row
             if (!$this->CSVRowIsValid($row)) {
 				echo 'row ', json_encode($row), ' is invalid!', "\n";
