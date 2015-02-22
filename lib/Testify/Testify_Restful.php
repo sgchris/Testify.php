@@ -55,6 +55,22 @@ class Testify_Restful extends Testify {
     } 
 
 
+	/**
+	 * extra headers on every call
+	 * @var array
+	 */
+    private $headers = array();
+
+    /**
+     * @brief 
+     * @param array $headers - e.g. array('Content-Type: text/html', ...)
+     * @return \Testify_Restful
+     */
+    public function addCustomHeader($headers) {
+        $this->headers = array_merge($this->headers, $headers);
+		return $this;
+    }
+
     /**
      * assertRequest 
      * 
@@ -81,16 +97,28 @@ class Testify_Restful extends Testify {
         // set the request method
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $method);
 
+        // set the request parameters
+        if (!is_null($parametersStr)) {
+			if (strcasecmp($method, 'put') == 0) {
+				// content-length needed for PUT requests
+				$this->addCustomHeader(array('Content-Length: ' . strlen($parametersStr)));
+			}
+			if (strcasecmp($method, 'post') == 0 || strcasecmp($method, 'put') == 0) {
+				curl_setopt($ch, CURLOPT_POSTFIELDS, $parametersStr);
+			} elseif (strcasecmp($method, 'get') == 0) {
+				if (strpos($url, '?') !== false) {
+					$url.= '&' . $parametersStr;
+				} else {
+					$url.= '?' . $parametersStr;
+				}
+			}
+        }
+		
         // set the URL
         curl_setopt($ch, CURLOPT_URL, $url);
 
-        // set the request parameters
-        if (!is_null($parametersStr)) {
-            // content-length needed for PUT requests
-            curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Length: ' . strlen($parametersStr))); 
-            curl_setopt($ch, CURLOPT_POSTFIELDS, $parametersStr);
-        }
-
+		curl_setopt($ch, CURLOPT_HTTPHEADER, $this->headers); 
+		
         // set the return as string flag
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
