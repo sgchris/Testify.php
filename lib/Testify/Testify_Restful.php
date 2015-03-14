@@ -95,7 +95,7 @@ class Testify_Restful extends Testify {
             : (is_string($parameters) && !empty($parameters) ? $parameters : null);
 
         // set the request method
-        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $method);
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, strtoupper($method));
 
         // set the request parameters
         if (!is_null($parametersStr)) {
